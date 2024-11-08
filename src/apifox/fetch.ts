@@ -1,8 +1,7 @@
 import { message } from "antd";
 import { API_BASE_URL, API_BASE_URL_DEV } from "../libs/constants";
 import { ConfigurationParameters, FetchAPI } from "./";
-import useLoginStore from "../stores/login";
-import { LanguageOptions } from "@constants/index";
+import { LanguageOptions } from "@/constants/index";
 
 const fetchApi: FetchAPI = (url, options) => {
   return fetch(`${url}`, options);
@@ -24,7 +23,7 @@ const defaultConfiguration: ConfigurationParameters = {
           if (data.code === 100100 || data.code === 100102) {
             // token not found
             message.error("请重新登录～");
-            useLoginStore.setState({ isLogin: false, token: "" });
+            // useLoginStore.setState({ isLogin: false, token: "" });
             window.location.href = "/login";
           } else {
             message.error(data.message || "error");
@@ -39,13 +38,13 @@ const defaultConfiguration: ConfigurationParameters = {
         if (!context || !context.init || !context.init.headers) {
           context.init = {
             headers: {
-              Authorization: useLoginStore.getState().token || "",
+              Authorization:  localStorage.getItem('token') || '',
               Language,
             },
           };
         } else {
           const headers: any = context.init.headers;
-          headers["Authorization"] = useLoginStore.getState().token;
+          headers["Authorization"] = localStorage.getItem('token') || '';
           headers["Language"] = Language;
         }
         return context;

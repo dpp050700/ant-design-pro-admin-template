@@ -8,6 +8,7 @@ import Settings from '../../../../config/defaultSettings';
 import React from 'react';
 import { flushSync } from 'react-dom';
 import { createStyles } from 'antd-style';
+import { AuthServiceApi } from '@/apifox';
 
 const useStyles = createStyles(({ token }) => {
   return {
@@ -47,9 +48,10 @@ const Login: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   const intl = useIntl();
+  const authService = new AuthServiceApi();
 
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
+  const fetchUserInfo = async (id: string) => {
+    const userInfo = await initialState?.fetchUserInfo?.(id);
     if (userInfo) {
       flushSync(() => {
         setInitialState((s) => ({
@@ -60,21 +62,21 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: any) => {
     try {
       // 登录
-      const msg = await login({ ...values });
-      if (msg.status === 'ok') {
-        const defaultLoginSuccessMessage = intl.formatMessage({
-          id: 'pages.login.success',
-          defaultMessage: '登录成功！',
-        });
-        message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        return;
-      }
+      const { userId, jwtToken } = await authService.authServiceAdminLogin({ body: { ...values } });
+      localStorage.setItem('login_id', userId);
+      localStorage.setItem('token', jwtToken);
+      const defaultLoginSuccessMessage = intl.formatMessage({
+        id: 'pages.login.success',
+        defaultMessage: '登录成功！',
+      });
+      message.success(defaultLoginSuccessMessage);
+      await fetchUserInfo(userId);
+      const urlParams = new URL(window.location.href).searchParams;
+      history.push(urlParams.get('redirect') || '/');
+      return;
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
@@ -105,20 +107,21 @@ const Login: React.FC = () => {
           initialValues={{
             autoLogin: true,
           }}
-          onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+          onFinish={async (values: any) => {
+            await handleSubmit(values);
           }}
         >
           <div style={{ marginTop: 20 }}>
             <ProFormText
-              name="username"
+              name="email"
+              initialValue="kooksee@163.com"
               fieldProps={{
                 size: 'large',
                 prefix: <UserOutlined />,
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.username.placeholder',
-                defaultMessage: '用户名: admin or user',
+                defaultMessage: '请输入登录邮箱',
               })}
               rules={[
                 {
@@ -126,7 +129,7 @@ const Login: React.FC = () => {
                   message: (
                     <FormattedMessage
                       id="pages.login.username.required"
-                      defaultMessage="请输入用户名!"
+                      defaultMessage="请输入登录邮箱!"
                     />
                   ),
                 },
@@ -134,6 +137,7 @@ const Login: React.FC = () => {
             />
             <ProFormText.Password
               name="password"
+              initialValue={'123456'}
               fieldProps={{
                 size: 'large',
                 prefix: <LockOutlined />,

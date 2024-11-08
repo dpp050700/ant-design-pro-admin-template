@@ -12,21 +12,44 @@
  */
 export default [
   {
-    path: '/user',
+    path: '/',
+    redirect: '/welcome',
+  },
+  {
+    path: '/login',
     layout: false,
     routes: [
       {
         name: 'login',
-        path: '/user/login',
+        path: '',
         component: './User/Login',
       },
     ],
   },
+
   {
     path: '/welcome',
     name: 'welcome',
     icon: 'smile',
     component: './Welcome',
+  },
+  {
+    path: '/user',
+    name: '用户管理',
+    icon: 'crown',
+    routes: [
+      {
+        name: '用户列表',
+        path: '/user/list',
+        component: './User/List',
+      },
+      {
+        name: '用户详情',
+        path: '/user/detail',
+        component: './User/List',
+        hideInMenu: true,
+      },
+    ],
   },
   {
     path: '/admin',
@@ -51,10 +74,7 @@ export default [
     path: '/list',
     component: './TableList',
   },
-  {
-    path: '/',
-    redirect: '/welcome',
-  },
+
   {
     path: '*',
     layout: false,

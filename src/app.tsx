@@ -4,22 +4,22 @@ import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import React from 'react';
+import { User, UserServiceApi } from './apifox';
 const loginPath = '/user/login';
 
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
+  currentUser?: User;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchUserInfo?: (id: string) => Promise<User | undefined>;
 }> {
-  const fetchUserInfo = async () => {
+  const userService = new UserServiceApi();
+
+  const fetchUserInfo = async (id: string) => {
     try {
-      const msg = await queryCurrentUser({
-        skipErrorHandler: true,
-      });
-      return msg.data;
+      const userInfo = await userService.userServiceDetail({ id });
+      return userInfo;
     } catch (error) {
       history.push(loginPath);
     }
@@ -28,7 +28,8 @@ export async function getInitialState(): Promise<{
   // 如果不是登录页面，执行
   const { location } = history;
   if (location.pathname !== loginPath) {
-    const currentUser = await fetchUserInfo();
+    const id = localStorage.getItem('login_id');
+    const currentUser = await fetchUserInfo(id!);
     return {
       fetchUserInfo,
       currentUser,
@@ -51,9 +52,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
-    waterMarkProps: {
-      content: initialState?.currentUser?.name,
-    },
+    // waterMarkProps: {
+    //   content: initialState?.currentUser?.nickname || '',
+    // },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;

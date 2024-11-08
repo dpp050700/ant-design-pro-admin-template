@@ -11,8 +11,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-export const BASE_PATH = "http://localhost".replace(/\/+$/, "");
-import defaultConfiguration from "./fetch";
+export const BASE_PATH = 'http://localhost'.replace(/\/+$/, '');
+import defaultConfiguration from './fetch';
 
 export interface ConfigurationParameters {
   basePath?: string; // override base path
@@ -38,9 +38,7 @@ export class Configuration {
   }
 
   get basePath(): string {
-    return this.configuration.basePath != null
-      ? this.configuration.basePath
-      : BASE_PATH;
+    return this.configuration.basePath != null ? this.configuration.basePath : BASE_PATH;
   }
 
   get fetchApi(): FetchAPI | undefined {
@@ -66,19 +64,15 @@ export class Configuration {
   get apiKey(): ((name: string) => string) | undefined {
     const apiKey = this.configuration.apiKey;
     if (apiKey) {
-      return typeof apiKey === "function" ? apiKey : () => apiKey;
+      return typeof apiKey === 'function' ? apiKey : () => apiKey;
     }
     return undefined;
   }
 
-  get accessToken():
-    | ((name?: string, scopes?: string[]) => string | Promise<string>)
-    | undefined {
+  get accessToken(): ((name?: string, scopes?: string[]) => string | Promise<string>) | undefined {
     const accessToken = this.configuration.accessToken;
     if (accessToken) {
-      return typeof accessToken === "function"
-        ? accessToken
-        : async () => accessToken;
+      return typeof accessToken === 'function' ? accessToken : async () => accessToken;
     }
     return undefined;
   }
@@ -99,8 +93,8 @@ export const DefaultConfig = new Configuration(defaultConfiguration);
  */
 export class BaseAPI {
   private static readonly jsonRegex = new RegExp(
-    "^(:?application/json|[^;/ \t]+/[^;/ \t]+[+]json)[ \t]*(:?;.*)?$",
-    "i"
+    '^(:?application/json|[^;/ \t]+/[^;/ \t]+[+]json)[ \t]*(:?;.*)?$',
+    'i',
   );
   private middleware: Middleware[];
 
@@ -114,18 +108,12 @@ export class BaseAPI {
     return next;
   }
 
-  withPreMiddleware<T extends BaseAPI>(
-    this: T,
-    ...preMiddlewares: Array<Middleware["pre"]>
-  ) {
+  withPreMiddleware<T extends BaseAPI>(this: T, ...preMiddlewares: Array<Middleware['pre']>) {
     const middlewares = preMiddlewares.map((pre) => ({ pre }));
     return this.withMiddleware<T>(...middlewares);
   }
 
-  withPostMiddleware<T extends BaseAPI>(
-    this: T,
-    ...postMiddlewares: Array<Middleware["post"]>
-  ) {
+  withPostMiddleware<T extends BaseAPI>(this: T, ...postMiddlewares: Array<Middleware['post']>) {
     const middlewares = postMiddlewares.map((post) => ({ post }));
     return this.withMiddleware<T>(...middlewares);
   }
@@ -149,44 +137,33 @@ export class BaseAPI {
 
   protected async request(
     context: RequestOpts,
-    initOverrides?: RequestInit | InitOverrideFunction
+    initOverrides?: RequestInit | InitOverrideFunction,
   ): Promise<Response> {
     const { url, init } = await this.createFetchParams(context, initOverrides);
     const response = await this.fetchApi(url, init);
     if (response && response.status >= 200 && response.status < 300) {
       return response;
     }
-    throw new ResponseError(response, "Response returned an error code");
+    throw new ResponseError(response, 'Response returned an error code');
   }
 
   private async createFetchParams(
     context: RequestOpts,
-    initOverrides?: RequestInit | InitOverrideFunction
+    initOverrides?: RequestInit | InitOverrideFunction,
   ) {
     let url = this.configuration.basePath + context.path;
-    if (
-      context.query !== undefined &&
-      Object.keys(context.query).length !== 0
-    ) {
+    if (context.query !== undefined && Object.keys(context.query).length !== 0) {
       // only add the querystring to the URL if there are query parameters.
       // this is done to avoid urls ending with a "?" character which buggy webservers
       // do not handle correctly sometimes.
-      url += "?" + this.configuration.queryParamsStringify(context.query);
+      url += '?' + this.configuration.queryParamsStringify(context.query);
     }
 
-    const headers = Object.assign(
-      {},
-      this.configuration.headers,
-      context.headers
-    );
-    Object.keys(headers).forEach((key) =>
-      headers[key] === undefined ? delete headers[key] : {}
-    );
+    const headers = Object.assign({}, this.configuration.headers, context.headers);
+    Object.keys(headers).forEach((key) => (headers[key] === undefined ? delete headers[key] : {}));
 
     const initOverrideFn =
-      typeof initOverrides === "function"
-        ? initOverrides
-        : async () => initOverrides;
+      typeof initOverrides === 'function' ? initOverrides : async () => initOverrides;
 
     const initParams = {
       method: context.method,
@@ -210,7 +187,7 @@ export class BaseAPI {
       isBlob(overriddenInit.body)
     ) {
       body = overriddenInit.body;
-    } else if (this.isJsonMime(headers["Content-Type"])) {
+    } else if (this.isJsonMime(headers['Content-Type'])) {
       body = JSON.stringify(overriddenInit.body);
     } else {
       body = overriddenInit.body;
@@ -237,10 +214,7 @@ export class BaseAPI {
     }
     let response: Response | undefined = undefined;
     try {
-      response = await (this.configuration.fetchApi || fetch)(
-        fetchParams.url,
-        fetchParams.init
-      );
+      response = await (this.configuration.fetchApi || fetch)(fetchParams.url, fetchParams.init);
     } catch (e) {
       for (const middleware of this.middleware) {
         if (middleware.onError) {
@@ -258,7 +232,7 @@ export class BaseAPI {
         if (e instanceof Error) {
           throw new FetchError(
             e,
-            "The request failed and the interceptors did not return an alternative response"
+            'The request failed and the interceptors did not return an alternative response',
           );
         } else {
           throw e;
@@ -292,52 +266,45 @@ export class BaseAPI {
 }
 
 function isBlob(value: any): value is Blob {
-  return typeof Blob !== "undefined" && value instanceof Blob;
+  return typeof Blob !== 'undefined' && value instanceof Blob;
 }
 
 function isFormData(value: any): value is FormData {
-  return typeof FormData !== "undefined" && value instanceof FormData;
+  return typeof FormData !== 'undefined' && value instanceof FormData;
 }
 
 export class ResponseError extends Error {
-  override name: "ResponseError" = "ResponseError";
+  override name: 'ResponseError' = 'ResponseError';
   constructor(public response: Response, msg?: string) {
     super(msg);
   }
 }
 
 export class FetchError extends Error {
-  override name: "FetchError" = "FetchError";
+  override name: 'FetchError' = 'FetchError';
   constructor(public cause: Error, msg?: string) {
     super(msg);
   }
 }
 
 export class RequiredError extends Error {
-  override name: "RequiredError" = "RequiredError";
+  override name: 'RequiredError' = 'RequiredError';
   constructor(public field: string, msg?: string) {
     super(msg);
   }
 }
 
 export const COLLECTION_FORMATS = {
-  csv: ",",
-  ssv: " ",
-  tsv: "\t",
-  pipes: "|",
+  csv: ',',
+  ssv: ' ',
+  tsv: '\t',
+  pipes: '|',
 };
 
-export type FetchAPI = WindowOrWorkerGlobalScope["fetch"];
+export type FetchAPI = WindowOrWorkerGlobalScope['fetch'];
 
 export type Json = any;
-export type HTTPMethod =
-  | "GET"
-  | "POST"
-  | "PUT"
-  | "PATCH"
-  | "DELETE"
-  | "OPTIONS"
-  | "HEAD";
+export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD';
 export type HTTPHeaders = { [key: string]: string };
 export type HTTPQuery = {
   [key: string]:
@@ -356,11 +323,7 @@ export type HTTPRequestInit = {
   credentials?: RequestCredentials;
   body?: HTTPBody;
 };
-export type ModelPropertyNaming =
-  | "camelCase"
-  | "snake_case"
-  | "PascalCase"
-  | "original";
+export type ModelPropertyNaming = 'camelCase' | 'snake_case' | 'PascalCase' | 'original';
 
 export type InitOverrideFunction = (requestContext: {
   init: HTTPRequestInit;
@@ -385,11 +348,11 @@ export function exists(json: any, key: string) {
   return value !== null && value !== undefined;
 }
 
-export function querystring(params: HTTPQuery, prefix: string = ""): string {
+export function querystring(params: HTTPQuery, prefix: string = ''): string {
   return Object.keys(params)
     .map((key) => querystringSingleKey(key, params[key], prefix))
     .filter((part) => part.length > 0)
-    .join("&");
+    .join('&');
 }
 
 function querystringSingleKey(
@@ -403,7 +366,7 @@ function querystringSingleKey(
     | Array<string | number | null | boolean>
     | Set<string | number | null | boolean>
     | HTTPQuery,
-  keyPrefix: string = ""
+  keyPrefix: string = '',
 ): string {
   const fullKey = keyPrefix + (keyPrefix.length ? `[${key}]` : key);
   if (value instanceof Array) {
@@ -417,9 +380,7 @@ function querystringSingleKey(
     return querystringSingleKey(key, valueAsArray, keyPrefix);
   }
   if (value instanceof Date) {
-    return `${encodeURIComponent(fullKey)}=${encodeURIComponent(
-      value.toISOString()
-    )}`;
+    return `${encodeURIComponent(fullKey)}=${encodeURIComponent(value.toISOString())}`;
   }
   if (value instanceof Object) {
     return querystring(value as HTTPQuery, fullKey);
@@ -428,15 +389,12 @@ function querystringSingleKey(
 }
 
 export function mapValues(data: any, fn: (item: any) => any) {
-  return Object.keys(data).reduce(
-    (acc, key) => ({ ...acc, [key]: fn(data[key]) }),
-    {}
-  );
+  return Object.keys(data).reduce((acc, key) => ({ ...acc, [key]: fn(data[key]) }), {});
 }
 
 export function canConsumeForm(consumes: Consume[]): boolean {
   for (const consume of consumes) {
-    if ("multipart/form-data" === consume.contentType) {
+    if ('multipart/form-data' === consume.contentType) {
       return true;
     }
   }
@@ -486,7 +444,7 @@ export interface ResponseTransformer<T> {
 export class JSONApiResponse<T> {
   constructor(
     public raw: Response,
-    private transformer: ResponseTransformer<T> = (jsonValue: any) => jsonValue
+    private transformer: ResponseTransformer<T> = (jsonValue: any) => jsonValue,
   ) {}
 
   async value(): Promise<T> {
