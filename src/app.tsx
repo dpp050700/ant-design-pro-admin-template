@@ -67,11 +67,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 增加一个 loading 的状态
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
-      return (
-        <>
-          {children}
-        </>
-      );
+      return <>{children}</>;
     },
     ...initialState?.settings,
   };

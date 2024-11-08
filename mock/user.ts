@@ -136,7 +136,7 @@ export default {
       access = 'user';
       return;
     }
-    
+
     res.send({
       status: 'error',
       currentAuthority: 'guest',
