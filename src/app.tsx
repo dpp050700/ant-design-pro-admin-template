@@ -6,7 +6,7 @@ import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import React from 'react';
 import { User, UserServiceApi } from './apifox';
-const loginPath = '/user/login';
+const loginPath = '/login';
 
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
