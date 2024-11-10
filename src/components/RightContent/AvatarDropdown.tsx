@@ -18,7 +18,7 @@ export const AvatarName = () => {
   const { initialState } = useModel('@@initialState');
   console.log(initialState, 22223);
   const { currentUser } = initialState || {};
-  return <span className="anticon">{currentUser?.name}</span>;
+  return <span className="anticon">{currentUser?.nickname}</span>;
 };
 
 const useStyles = createStyles(({ token }) => {
@@ -96,7 +96,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
 
   const { currentUser } = initialState;
 
-  if (!currentUser || !currentUser.name) {
+  if (!currentUser || !currentUser.nickname) {
     return loading;
   }
 

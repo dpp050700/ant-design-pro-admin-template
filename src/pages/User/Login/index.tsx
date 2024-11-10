@@ -1,15 +1,14 @@
 import { Footer } from '@/components';
-import { login } from '@/services/ant-design-pro/api';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
-import { FormattedMessage, history, SelectLang, useIntl, useModel, Helmet } from '@umijs/max';
+import { FormattedMessage, history, SelectLang, useIntl, useModel } from '@umijs/max';
 import { message } from 'antd';
 import Settings from '../../../../config/defaultSettings';
 import React from 'react';
 import { flushSync } from 'react-dom';
 import { createStyles } from 'antd-style';
-import { AuthServiceApi } from '@/apifox';
-
+import { AuthLoginRequest, AuthServiceApi } from '@/apifox';
+import loginBg from '../../../assets/images/login-bg.png';
 const useStyles = createStyles(({ token }) => {
   return {
     lang: {
@@ -28,8 +27,7 @@ const useStyles = createStyles(({ token }) => {
       flexDirection: 'column',
       height: '100vh',
       overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+      backgroundImage: `url(${loginBg})`,
       backgroundSize: '100% 100%',
     },
   };
@@ -62,7 +60,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: AuthLoginRequest) => {
     try {
       // 登录
       const { userId, jwtToken } = await authService.authServiceAdminLogin({ body: { ...values } });
@@ -82,7 +80,6 @@ const Login: React.FC = () => {
         id: 'pages.login.failure',
         defaultMessage: '登录失败，请重试！',
       });
-      console.log(error);
       message.error(defaultLoginFailureMessage);
     }
   };
@@ -93,83 +90,89 @@ const Login: React.FC = () => {
         style={{
           flex: '1',
           padding: '32px 0',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        <LoginForm
-          logo={
-            <img
-              alt="logo"
-              src="/logo.png"
-              style={{ display: 'block', borderRadius: '50%', width: 44, height: 44 }}
-            />
-          }
-          title={Settings.title}
-          initialValues={{
-            autoLogin: true,
-          }}
-          onFinish={async (values: any) => {
-            await handleSubmit(values);
-          }}
-        >
-          <div style={{ marginTop: 20 }}>
-            <ProFormText
-              name="email"
-              initialValue="kooksee@163.com"
-              fieldProps={{
-                size: 'large',
-                prefix: <UserOutlined />,
-              }}
-              placeholder={intl.formatMessage({
-                id: 'pages.login.username.placeholder',
-                defaultMessage: '请输入登录邮箱',
-              })}
-              rules={[
-                {
-                  required: true,
-                  message: (
-                    <FormattedMessage
-                      id="pages.login.username.required"
-                      defaultMessage="请输入登录邮箱!"
-                    />
-                  ),
-                },
-              ]}
-            />
-            <ProFormText.Password
-              name="password"
-              initialValue={'123456'}
-              fieldProps={{
-                size: 'large',
-                prefix: <LockOutlined />,
-              }}
-              placeholder={intl.formatMessage({
-                id: 'pages.login.password.placeholder',
-                defaultMessage: '密码: ant.design',
-              })}
-              rules={[
-                {
-                  required: true,
-                  message: (
-                    <FormattedMessage
-                      id="pages.login.password.required"
-                      defaultMessage="请输入密码！"
-                    />
-                  ),
-                },
-              ]}
-            />
-            <div
-              style={{
-                marginBottom: 24,
-                textAlign: 'right',
-              }}
-            >
-              <a>
-                <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
-              </a>
+        <div>
+          <LoginForm
+            logo={
+              <img
+                alt="logo"
+                src="/logo.png"
+                style={{ display: 'block', borderRadius: '50%', width: 44, height: 44 }}
+              />
+            }
+            title={Settings.title}
+            initialValues={{
+              autoLogin: true,
+            }}
+            onFinish={async (values: any) => {
+              await handleSubmit(values);
+            }}
+          >
+            <div style={{ marginTop: 20 }}>
+              <ProFormText
+                name="email"
+                initialValue="kooksee@163.com"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined />,
+                }}
+                placeholder={intl.formatMessage({
+                  id: 'pages.login.username.placeholder',
+                  defaultMessage: '请输入登录邮箱',
+                })}
+                rules={[
+                  {
+                    required: true,
+                    message: (
+                      <FormattedMessage
+                        id="pages.login.username.required"
+                        defaultMessage="请输入登录邮箱!"
+                      />
+                    ),
+                  },
+                ]}
+              />
+              <ProFormText.Password
+                name="password"
+                initialValue={'123456'}
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined />,
+                }}
+                placeholder={intl.formatMessage({
+                  id: 'pages.login.password.placeholder',
+                  defaultMessage: '密码: ant.design',
+                })}
+                rules={[
+                  {
+                    required: true,
+                    message: (
+                      <FormattedMessage
+                        id="pages.login.password.required"
+                        defaultMessage="请输入密码！"
+                      />
+                    ),
+                  },
+                ]}
+              />
+              <div
+                style={{
+                  marginBottom: 24,
+                  textAlign: 'right',
+                  display: 'none',
+                }}
+              >
+                <a>
+                  <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
+                </a>
+              </div>
             </div>
-          </div>
-        </LoginForm>
+          </LoginForm>
+        </div>
       </div>
       <Footer />
     </div>
