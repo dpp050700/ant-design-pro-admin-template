@@ -1,7 +1,8 @@
-import { message } from "antd";
-import { API_BASE_URL, API_BASE_URL_DEV } from "../libs/constants";
-import { ConfigurationParameters, FetchAPI } from "./";
-import { LanguageOptions } from "@/constants/index";
+import { message } from 'antd';
+import { API_BASE_URL, API_BASE_URL_DEV } from '../libs/constants';
+import { ConfigurationParameters, FetchAPI } from './';
+import { LanguageOptions } from '@/constants/index';
+import { LANGUAGE, TOKEN } from '@/constants/localStorage';
 
 const fetchApi: FetchAPI = (url, options) => {
   return fetch(`${url}`, options);
@@ -22,30 +23,29 @@ const defaultConfiguration: ConfigurationParameters = {
         ) {
           if (data.code === 100100 || data.code === 100102) {
             // token not found
-            message.error("请重新登录～");
+            message.error('请重新登录～');
             // useLoginStore.setState({ isLogin: false, token: "" });
-            window.location.href = "/login";
+            window.location.href = '/login';
           } else {
-            message.error(data.message || "error");
+            message.error(data.message || 'error');
           }
         }
 
         return response;
       },
       pre: async (context) => {
-        const Language =
-          localStorage.getItem("language") || LanguageOptions[0].value;
+        const Language = localStorage.getItem(LANGUAGE) || LanguageOptions[0].value;
         if (!context || !context.init || !context.init.headers) {
           context.init = {
             headers: {
-              Authorization:  localStorage.getItem('token') || '',
+              Authorization: localStorage.getItem(TOKEN) || '',
               Language,
             },
           };
         } else {
           const headers: any = context.init.headers;
-          headers["Authorization"] = localStorage.getItem('token') || '';
-          headers["Language"] = Language;
+          headers['Authorization'] = localStorage.getItem(TOKEN) || '';
+          headers['Language'] = Language;
         }
         return context;
       },

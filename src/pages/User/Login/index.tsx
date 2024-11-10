@@ -9,6 +9,7 @@ import { flushSync } from 'react-dom';
 import { createStyles } from 'antd-style';
 import { AuthLoginRequest, AuthServiceApi } from '@/apifox';
 import loginBg from '../../../assets/images/login-bg.png';
+import { TOKEN, USER_ID } from '@/constants/localStorage';
 const useStyles = createStyles(({ token }) => {
   return {
     lang: {
@@ -64,8 +65,8 @@ const Login: React.FC = () => {
     try {
       // 登录
       const { userId, jwtToken } = await authService.authServiceAdminLogin({ body: { ...values } });
-      localStorage.setItem('login_id', userId);
-      localStorage.setItem('token', jwtToken);
+      localStorage.setItem(USER_ID, userId);
+      localStorage.setItem(TOKEN, jwtToken);
       const defaultLoginSuccessMessage = intl.formatMessage({
         id: 'pages.login.success',
         defaultMessage: '登录成功！',

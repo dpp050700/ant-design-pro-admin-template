@@ -7,6 +7,7 @@ import { errorConfig } from './requestErrorConfig';
 import React from 'react';
 import { User, UserServiceApi } from './apifox';
 import { UserOutlined } from '@ant-design/icons';
+import { USER_ID } from './constants/localStorage';
 const loginPath = '/login';
 
 export async function getInitialState(): Promise<{
@@ -29,7 +30,7 @@ export async function getInitialState(): Promise<{
   // 如果不是登录页面，执行
   const { location } = history;
   if (location.pathname !== loginPath) {
-    const id = localStorage.getItem('login_id');
+    const id = localStorage.getItem(USER_ID);
     const currentUser = await fetchUserInfo(id!);
     return {
       fetchUserInfo,
