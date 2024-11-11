@@ -1,0 +1,21 @@
+.activetab {
+  font-weight: 500;
+  &::after {
+    content: "";
+    width: 36px;
+    height: 4px;
+    background: #1c77ff;
+    border-radius: 3px;
+    position: absolute;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    bottom: -4px;
+  }
+}
+.jifenModalForm {
+  :global {
+    .ant-form-item:nth-child(4) .ant-form-item-label > label::after {
+      opacity: 0;
+    }
+  }
+}

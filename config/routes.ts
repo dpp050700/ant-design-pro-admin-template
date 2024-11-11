@@ -22,35 +22,95 @@ export default [
       {
         name: 'login',
         path: '',
-        component: './User/Login',
+        component: './user/Login',
       },
     ],
   },
 
   {
     path: '/welcome',
-    name: 'welcome',
+    name: '首页',
     icon: 'smile',
     component: './Welcome',
   },
   {
     path: '/user',
-    name: '用户管理',
+    name: '用户中心',
     icon: 'crown',
     routes: [
       {
         name: '用户列表',
         path: '/user/list',
-        component: './User/List',
+        component: './user/List',
       },
       {
         name: '用户详情',
-        path: '/user/detail',
-        component: './User/List',
+        path: '/user/detail/:id',
+        component: './user/detail',
         hideInMenu: true,
       },
     ],
   },
+
+  {
+    path: '/room',
+    name: '房源管理',
+    icon: 'smile',
+    routes: [
+      {
+        path: '/room/list',
+        name: '房源列表',
+        component: './room/list',
+      },
+      {
+        path: '/room/detail/:id',
+        title: '房源详情',
+        component: './room/detail',
+        hiddenMenu: true,
+      },
+      {
+        path: '/room/crawl',
+        name: '爬虫房源',
+        component: './room/crawl',
+      },
+      {
+        path: '/room/infra',
+        name: '房源设施',
+        component: './roomInfra/list',
+      },
+    ],
+  },
+  {
+    path: '/attraction',
+    name: '目的地管理',
+    icon: 'TableOutlined',
+    routes: [
+      {
+        path: '/attraction/list',
+        name: '目的地列表',
+        component: './attraction/attraction.list',
+      },
+    ],
+  },
+  {
+    path: '/special_service',
+    name: '特色服务管理',
+    icon: 'TableOutlined',
+    routes: [
+      {
+        path: '/special_service/catalog/list',
+        name: '服务类型列表',
+        component: './specialServiceCatalog/list',
+      },
+      {
+        path: '/special_service/list/:id',
+        name: '服务列表',
+        component: './special_service/list',
+        hideInMenu: true,
+      },
+    ],
+  },
+
   {
     path: '/admin',
     name: 'admin',

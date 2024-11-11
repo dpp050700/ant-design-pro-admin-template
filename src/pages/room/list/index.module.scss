@@ -1,0 +1,9 @@
+.calendar {
+  :global {
+    .ant-picker-calendar-header {
+      .ant-picker-calendar-mode-switch {
+        display: none;
+      }
+    }
+  }
+}

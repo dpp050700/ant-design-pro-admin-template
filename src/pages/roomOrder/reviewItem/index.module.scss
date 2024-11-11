@@ -1,0 +1,13 @@
+.review-item {
+  .score-tag {
+    padding: 0 10px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 13px;
+    line-height: 1;
+  }
+}
