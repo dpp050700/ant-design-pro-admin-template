@@ -3,7 +3,6 @@ import { ActionType, ParamsType, ProColumns, ProTable } from '@ant-design/pro-co
 import { Story, StoryServiceApi, StoryAdminServiceApi, StoryStatus } from '@/apifox/index';
 import { Button, message, Modal } from 'antd';
 import { history } from '@umijs/max';
-import style from './index.module.scss';
 
 const storyServiceApi = new StoryServiceApi();
 const storyAdminServiceApi = new StoryAdminServiceApi();

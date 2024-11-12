@@ -31,7 +31,7 @@ export default [
     path: '/welcome',
     name: '首页',
     icon: 'smile',
-    component: './Welcome',
+    component: './dashbord',
   },
   {
     path: '/user',
@@ -110,29 +110,137 @@ export default [
       },
     ],
   },
-
   {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
+    path: '/order',
+    name: '订单管理',
+    icon: 'smile',
     routes: [
       {
-        path: '/admin',
-        redirect: '/admin/sub-page',
-      },
-      {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
+        path: '/order/room/list',
+        name: '房源订单',
+        component: './roomOrder/list',
       },
     ],
   },
+
   {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
+    path: 'channel',
+    name: '频道管理',
+    icon: 'TableOutlined',
+    routes: [
+      {
+        path: '/channel/list',
+        name: '社区分享列表',
+        component: './channel/list',
+      },
+      {
+        path: '/channel/detail/:id',
+        name: '文章详情',
+        component: './channel/detail',
+        hideInMenu: true,
+      },
+    ],
+  },
+
+  {
+    path: 'guide',
+    name: '攻略管理',
+    icon: 'TableOutlined',
+    routes: [
+      {
+        path: '/guide/list',
+        name: '攻略列表',
+        component: './guide/list',
+      },
+      {
+        path: '/guide/detail/:id',
+        name: '文章详情',
+        component: './guide/detail',
+        hideInMenu: true,
+      },
+    ],
+  },
+
+  {
+    path: 'tag',
+    name: '标签管理',
+    icon: 'TableOutlined',
+    routes: [
+      {
+        path: '/tag/list',
+        name: '标签列表',
+        component: './tag/list',
+      },
+    ],
+  },
+
+  {
+    path: 'notice',
+    name: '公告管理',
+    icon: 'TableOutlined',
+    routes: [
+      {
+        path: '/notice/list',
+        name: '公告列表',
+        component: './notice/detail',
+      },
+    ],
+  },
+
+  {
+    path: 'banner',
+    name: 'Banner管理',
+    icon: 'TableOutlined',
+    component: './banner',
+  },
+
+  {
+    path: 'pointsMarket',
+    name: '积分商城',
+    icon: 'TableOutlined',
+    routes: [
+      {
+        path: '/pointsMarket/goodsList',
+        name: '商品列表',
+        component: './pointsMarket/goodsList',
+      },
+      {
+        path: '/pointsMarket/goodsDetail/:id',
+        name: '商品详情',
+        component: './pointsMarket/goodsDetail',
+        hideInMenu: true,
+      },
+      {
+        path: '/pointsMarket/exchangeList',
+        name: '兑换列表',
+        component: './pointsMarket/exchangeList',
+      },
+    ],
+  },
+
+  {
+    path: 'raffles',
+    name: '轮盘活动',
+    icon: 'TableOutlined',
+    // element: <PointsMarket />,
+    routes: [
+      {
+        path: '/raffles/goodsList',
+        name: '奖项设置',
+        component: './raffles/goodsList',
+      },
+      {
+        path: '/raffles/goodsDetail/:id',
+        name: '奖项详情',
+        component: './raffles/goodsDetail',
+        hideInMenu: true,
+      },
+      {
+        path: '/raffles/exchangeList',
+        name: '兑换列表',
+        component: './raffles/exchangeList',
+      },
+    ],
   },
 
   {

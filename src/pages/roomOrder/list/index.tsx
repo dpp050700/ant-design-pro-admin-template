@@ -5,8 +5,8 @@ import { Alert, Button, Divider, Modal, message, Typography } from 'antd';
 import style from './index.module.scss';
 import ReviewItem from '../reviewItem';
 import dayjs from 'dayjs';
-import useLoginStore from '@/stores/login';
 import { WEB_SITE_URL_PC } from '@/libs/constants';
+import { useModel } from '@umijs/max';
 
 const orderService = new OrderServiceApi();
 
@@ -33,7 +33,7 @@ const OrderStatusTag = ({ status }: { status: OrderStatus }) => {
 };
 
 const TablePage: React.FC = () => {
-  const userId = useLoginStore((state) => state.userInfo?.userId);
+  const { initialState } = useModel('@@initialState');
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<Order>[] = [
     {
@@ -281,9 +281,14 @@ const TablePage: React.FC = () => {
       icon: null,
       width: '680px',
       onOk() {
-        orderService.orderServiceCancel({ id: data.id, body: { userId: userId! } }).then(() => {
-          actionRef.current?.reload();
-        });
+        orderService
+          .orderServiceCancel({
+            id: data.id,
+            body: { userId: initialState?.currentUser?.id || '' },
+          })
+          .then(() => {
+            actionRef.current?.reload();
+          });
       },
       footer: (footer) => {
         return (
