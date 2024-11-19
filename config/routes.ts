@@ -52,6 +52,24 @@ export default [
     ],
   },
   {
+    path: '/attraction',
+    name: '目的地管理',
+    icon: 'crown',
+    routes: [
+      {
+        name: '目的地列表',
+        path: '/attraction/list',
+        component: './attraction/list',
+      },
+      {
+        name: '目的地详情',
+        path: '/attraction/detail',
+        component: './attraction/list',
+        hideInMenu: true,
+      },
+    ],
+  },
+  {
     path: '/admin',
     name: 'admin',
     icon: 'crown',

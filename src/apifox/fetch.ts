@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { API_BASE_URL, API_BASE_URL_DEV } from '../libs/constants';
+import { API_BASE_URL } from '../libs/constants';
 import { ConfigurationParameters, FetchAPI } from './';
 import { LanguageOptions } from '@/constants/index';
 import { LANGUAGE, TOKEN } from '@/constants/localStorage';
@@ -34,7 +34,9 @@ const defaultConfiguration: ConfigurationParameters = {
         return response;
       },
       pre: async (context) => {
-        const Language = localStorage.getItem(LANGUAGE) || LanguageOptions[0].value;
+        const Language =
+          LanguageOptions.find((item) => item.key === localStorage.getItem(LANGUAGE))?.value ||
+          LanguageOptions[0].value;
         if (!context || !context.init || !context.init.headers) {
           context.init = {
             headers: {
