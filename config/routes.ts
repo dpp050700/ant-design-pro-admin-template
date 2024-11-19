@@ -22,7 +22,7 @@ export default [
       {
         name: 'login',
         path: '',
-        component: './User/Login',
+        component: './user/Login',
       },
     ],
   },
@@ -41,12 +41,12 @@ export default [
       {
         name: '用户列表',
         path: '/user/list',
-        component: './User/List',
+        component: './user/List',
       },
       {
         name: '用户详情',
         path: '/user/detail',
-        component: './User/List',
+        component: './user/List',
         hideInMenu: true,
       },
     ],
