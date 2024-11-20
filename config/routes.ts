@@ -53,11 +53,11 @@ export default [
   },
   {
     path: '/attraction',
-    name: '目的地管理',
+    name: '列表-Modal',
     icon: 'crown',
     routes: [
       {
-        name: '目的地列表',
+        name: '列表页面',
         path: '/attraction/list',
         component: './attraction/list',
       },

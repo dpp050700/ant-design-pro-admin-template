@@ -1,17 +1,23 @@
-import { ModalForm, ProFormText, ProTable } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
 import React from 'react';
 import {
   AttractionServiceApi,
   Attractions,
   Attraction,
   AttractionServiceFindRequest,
+  AttractionAdminServiceApi,
 } from '@/apifox';
 import useTable from '@/hooks/useTable/useTable';
 import useTableModalEdit from '@/hooks/useTable/useTableModalEdit';
+import useTableDelete from '@/hooks/useTable/useTableDelete';
+
+import Form from '../form';
+
 const List = () => {
   const service = new AttractionServiceApi();
+  const adminService = new AttractionAdminServiceApi();
 
-  const { AddButton, modalFormProps, EditButton } = useTableModalEdit({
+  const { AddButton, modalFormProps, EditButton, editId } = useTableModalEdit({
     getDetail: (id) => service.attractionServiceDetail({ id }),
   });
 
@@ -35,9 +41,10 @@ const List = () => {
         dataIndex: 'index',
         valueType: 'indexBorder',
         width: 48,
+        title: '序号',
       },
       {
-        title: '景点名字',
+        title: '名字',
         dataIndex: 'name',
       },
       {
@@ -47,16 +54,24 @@ const List = () => {
         width: 100,
         fixed: 'right',
         render: (_, record) => {
-          return [<EditButton id={record.id} color="primary" variant="text" key="edit" />];
+          return [
+            <EditButton id={record.id} color="primary" variant="text" key="edit" />,
+            <DeleteButton id={record.id} key="delete" color="danger" variant="text" />,
+          ];
         },
       },
     ],
   });
 
+  const { DeleteButton } = useTableDelete({
+    deleteRequest: (id: any) => adminService.attractionAdminServiceDelete({ id }),
+    tableRef,
+  });
+
   return (
     <>
       <ProTable
-        headerTitle="目的地列表"
+        headerTitle="列表页面"
         actionRef={tableRef}
         rowKey="id"
         request={tableRequest}
@@ -69,14 +84,13 @@ const List = () => {
         }}
         toolBarRender={() => [<AddButton key="add" />]}
       />
-      <ModalForm
+      <Form
+        id={editId}
         {...modalFormProps}
         onFinish={async (values) => {
           console.log(values);
         }}
-      >
-        <ProFormText width="md" name="name" label="Name" placeholder="" />
-      </ModalForm>
+      ></Form>
     </>
   );
 };

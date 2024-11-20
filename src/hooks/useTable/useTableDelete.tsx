@@ -4,7 +4,7 @@ import type { ButtonProps } from 'antd';
 import type { ActionType } from '@ant-design/pro-components';
 interface UseTableAddProps {
   deleteRequest: (id: any) => Promise<any>;
-  tableRef: React.RefObject<ActionType>;
+  tableRef: React.RefObject<ActionType | undefined>;
 }
 
 const useTableDelete = (props: UseTableAddProps) => {
@@ -20,11 +20,11 @@ const useTableDelete = (props: UseTableAddProps) => {
     });
   };
 
-  const deleteButton = (props: { id: any; confirmMessage?: string } & ButtonProps) => {
+  const DeleteButton = (props: { id: any; confirmMessage?: string } & ButtonProps) => {
     const { id, confirmMessage = '确定删除吗？', ...rest } = props;
     return (
       <ReactFragment>
-        <Button danger {...rest} onClick={() => onDelete(id, confirmMessage)}>
+        <Button {...rest} onClick={() => onDelete(id, confirmMessage)}>
           删除
         </Button>
       </ReactFragment>
@@ -32,7 +32,7 @@ const useTableDelete = (props: UseTableAddProps) => {
   };
 
   return {
-    deleteButton,
+    DeleteButton,
   };
 };
 
