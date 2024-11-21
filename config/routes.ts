@@ -35,16 +35,16 @@ export default [
   },
   {
     path: '/user',
-    name: '用户管理',
+    name: 'user',
     icon: 'crown',
     routes: [
       {
-        name: '用户列表',
+        name: 'list',
         path: '/user/list',
         component: './user/List',
       },
       {
-        name: '用户详情',
+        name: 'detail',
         path: '/user/detail',
         component: './user/List',
         hideInMenu: true,
@@ -53,16 +53,16 @@ export default [
   },
   {
     path: '/attraction',
-    name: '列表-Modal',
+    name: 'attraction',
     icon: 'crown',
     routes: [
       {
-        name: '列表页面',
+        name: 'list',
         path: '/attraction/list',
         component: './attraction/list',
       },
       {
-        name: '目的地详情',
+        name: 'detail',
         path: '/attraction/detail',
         component: './attraction/list',
         hideInMenu: true,
