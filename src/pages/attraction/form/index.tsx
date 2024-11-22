@@ -1,12 +1,15 @@
 import ProFormQuill from '@/components/ProFormFields/ProFormQuill';
-import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
+import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import type { ModalFormProps } from '@ant-design/pro-components';
+import { useRef } from 'react';
+import type {} from 'antd';
 
 interface FormProps {
   id?: string | number;
 }
 
 const Form = (props: FormProps & ModalFormProps) => {
+  const ref = useRef<any>(null);
   const { title: _title, id, ...modalFormProps } = props;
 
   const title = _title ? _title : id ? `修改` : '添加';
@@ -16,33 +19,18 @@ const Form = (props: FormProps & ModalFormProps) => {
       {...modalFormProps}
       title={title}
       grid
-      layout="inline"
-      rowProps={{ gutter: [10, 10] }} // gutter 设置 x 轴 y轴 间距
+      layout="horizontal"
+      rowProps={{ gutter: [0, 0] }} // gutter 设置 x 轴 y轴 间距
       labelCol={{ span: 6 }}
       colProps={{ span: 12 }}
+      formRef={ref}
     >
-      <ProFormText
-        name="name"
-        label="名称"
-        placeholder="请输入名称"
-        colProps={{ span: 12 }}
-        labelCol={{ span: 6 }} //{span: '120px'} 设置 label 固定宽度
-        rules={[{ required: true, message: '请输入名称' }]}
-      />
-      <ProFormText
-        name="description"
-        label="描述"
-        placeholder="请输入描述"
-        colProps={{ span: 12 }}
-        labelCol={{ span: 6 }}
-        rules={[{ required: true, message: '请输入描述' }]}
-      />
       <ProFormText
         name="name"
         label="Name"
         placeholder=""
-        labelCol={{ span: 3 }}
-        colProps={{ span: 24 }}
+        labelCol={{ span: 6 }}
+        colProps={{ span: 12 }}
       />
       <ProFormText
         name="age"
@@ -50,19 +38,32 @@ const Form = (props: FormProps & ModalFormProps) => {
         placeholder=""
         labelCol={{ span: 6 }}
         colProps={{ span: 12 }}
+        initialValue={'111111'}
       />
 
-      <ProFormSelect
-        name="select"
-        label="Select"
-        valueEnum={{
-          china: 'China',
-          usa: 'U.S.A',
-        }}
-        placeholder="Please select a country"
-        rules={[{ required: true, message: 'Please select your country!' }]}
+      <ProFormText
+        name="name11"
+        label="Name"
+        placeholder=""
+        labelCol={{ span: 3 }}
+        colProps={{ span: 24 }}
       />
-      <ProFormQuill name="detail" label="detail" labelCol={{ span: 6 }} colProps={{ span: 12 }} />
+
+      <ProFormQuill
+        initialValue={'<div>11112</div>'}
+        name="detail"
+        label="detail"
+        labelCol={{ span: 3 }}
+        colProps={{ span: 24 }}
+      />
+      <div
+        onClick={() => {
+          // alert(ref.current.getFieldValue('detail'));
+          ref.current.setFieldValue('detail', '<div>hello</div>');
+        }}
+      >
+        1111112
+      </div>
     </ModalForm>
   );
 };

@@ -1,16 +1,31 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { ProForm } from '@ant-design/pro-components';
 import { Form, Col } from 'antd';
+import type { ProFormFieldProps } from '@ant-design/pro-components';
+import type { ReactQuillProps } from 'react-quill';
 
-const ProFormQuill = (props: any) => {
-  const [value, setValue] = useState('');
+const ProFormQuill = (props: ProFormFieldProps<any, ReactQuillProps>) => {
+  const { colProps, initialValue, fieldProps, ...rest } = props;
+  const [value, setValue] = useState(initialValue);
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['image'],
+    ],
+  };
   return (
-    <Col {...props.colProps}>
-      <Form.Item {...props}>
-        <ReactQuill theme="snow" value={value} onChange={setValue} />;
+    <Col {...colProps}>
+      <Form.Item {...rest}>
+        <ReactQuill
+          theme="snow"
+          value={value}
+          onChange={setValue}
+          modules={modules}
+          {...fieldProps}
+        />
       </Form.Item>
     </Col>
   );
