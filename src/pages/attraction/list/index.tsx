@@ -17,10 +17,6 @@ const List = () => {
   const service = new AttractionServiceApi();
   const adminService = new AttractionAdminServiceApi();
 
-  const { AddButton, modalFormProps, EditButton, editId } = useTableModalEdit({
-    getDetail: (id) => service.attractionServiceDetail({ id }),
-  });
-
   const { tableRef, tableRequest, pageSize, columns } = useTable<
     Attractions,
     Attraction,
@@ -63,6 +59,15 @@ const List = () => {
     ],
   });
 
+  const { AddButton, modalFormProps, EditButton, editId } = useTableModalEdit<Attraction>({
+    getDetail: (id) => service.attractionServiceDetail({ id }),
+    postDetail: (values) =>
+      adminService.attractionAdminServiceCreate({ body: { attraction: values } }),
+    putDetail: (id, values) =>
+      adminService.attractionAdminServiceUpdate({ attractionId: id, body: { attraction: values } }),
+    tableRef,
+  });
+
   const { DeleteButton } = useTableDelete({
     deleteRequest: (id: any) => adminService.attractionAdminServiceDelete({ id }),
     tableRef,
@@ -84,13 +89,7 @@ const List = () => {
         }}
         toolBarRender={() => [<AddButton key="add" />]}
       />
-      <Form
-        id={editId}
-        {...modalFormProps}
-        onFinish={async (values) => {
-          console.log(values);
-        }}
-      ></Form>
+      <Form id={editId} {...modalFormProps}></Form>
     </>
   );
 };
