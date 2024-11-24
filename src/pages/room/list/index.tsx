@@ -1,36 +1,51 @@
 import { ProTable } from '@ant-design/pro-components';
 import React from 'react';
 import {
-  AttractionServiceApi,
-  Attractions,
-  Attraction,
-  AttractionServiceFindRequest,
   AttractionAdminServiceApi,
+  RoomServiceApi,
+  Rooms,
+  Room,
+  RoomServiceFindRequest,
+  RoomStatus,
 } from '@/apifox';
 import useTable from '@/hooks/useTable/useTable';
-import useTableModalEdit from '@/hooks/useTable/useTableModalEdit';
 import useTableDelete from '@/hooks/useTable/useTableDelete';
-
-import Form from '../form';
+import useTablePageEdit from '@/hooks/useTable/useTablePageEdit';
 
 const List = () => {
-  const service = new AttractionServiceApi();
+  const service = new RoomServiceApi();
   const adminService = new AttractionAdminServiceApi();
 
-  const { tableRef, tableRequest, pageSize, columns } = useTable<
-    Attractions,
-    Attraction,
-    AttractionServiceFindRequest
+  const tabItems = [
+    {
+      key: RoomStatus.Published,
+      label: '已上架',
+      children: null,
+    },
+    {
+      key: RoomStatus.Draft,
+      label: '未上架',
+      children: null,
+    },
+  ];
+
+  const { tableRef, tableRequest, pageSize, columns, tabs } = useTable<
+    Rooms,
+    Room,
+    RoomServiceFindRequest
   >({
     requestSetting: {
       request: async (params) => {
-        const { attractions = [], ...rest } = await service.attractionServiceFind(params);
-        const newAttractions = attractions.map((item) => {
+        const { rooms = [], ...rest } = await service.roomServiceFind({
+          ...params,
+          status: tabs?.activeKey,
+        });
+        const newRooms = rooms.map((item) => {
           return { ...item, children: undefined };
         });
-        return { ...rest, attractions: newAttractions };
+        return { ...rest, rooms: newRooms };
       },
-      dataIndex: 'attractions',
+      dataIndex: 'rooms',
     },
     columns: [
       {
@@ -41,7 +56,7 @@ const List = () => {
       },
       {
         title: '名字',
-        dataIndex: 'name',
+        dataIndex: 'title',
         search: false,
       },
       {
@@ -58,15 +73,11 @@ const List = () => {
         },
       },
     ],
+    tabs: tabItems,
   });
 
-  const { AddButton, modalFormProps, EditButton, editId } = useTableModalEdit<Attraction>({
-    getDetail: (id) => service.attractionServiceDetail({ id }),
-    postDetail: (values) =>
-      adminService.attractionAdminServiceCreate({ body: { attraction: values } }),
-    putDetail: (id, values) =>
-      adminService.attractionAdminServiceUpdate({ attractionId: id, body: { attraction: values } }),
-    tableRef,
+  const { AddButton, EditButton } = useTablePageEdit({
+    path: '/room/detail',
   });
 
   const { DeleteButton } = useTableDelete({
@@ -89,8 +100,11 @@ const List = () => {
           pageSize,
         }}
         toolBarRender={() => [<AddButton key="add" />]}
+        toolbar={{
+          multipleLine: true,
+          tabs,
+        }}
       />
-      <Form id={editId} {...modalFormProps}></Form>
     </>
   );
 };

@@ -10,4 +10,7 @@ export default {
   'menu.user': '用户管理',
   'menu.user.list': '用户列表',
   'menu.user.detail': '用户详情',
+  'menu.room': '房间',
+  'menu.room.list': '房间列表',
+  'menu.room.detail': '房间详情',
 };

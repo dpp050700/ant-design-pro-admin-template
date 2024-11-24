@@ -1,6 +1,14 @@
-import { ActionType, ParamsType, ProTableProps, ProColumns } from '@ant-design/pro-components';
+import {
+  ActionType,
+  ParamsType,
+  ProTableProps,
+  ProColumns,
+  ListToolBarProps,
+} from '@ant-design/pro-components';
 import { useRequest } from 'ahooks';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+
+type ListToolBarTabs = NonNullable<ListToolBarProps['tabs']>;
 
 interface UseTableProps<T, P, D> {
   requestSetting: {
@@ -11,11 +19,18 @@ interface UseTableProps<T, P, D> {
     currentIndex?: keyof P;
   };
   columns: ProColumns<D>[];
+  tabs?: ListToolBarTabs['items'] | ListToolBarTabs;
 }
 const useTable = <T, D, P extends ParamsType = ParamsType>(props: UseTableProps<T, P, D>) => {
   const defaultPageSize = 10;
 
   const tableRef = useRef<ActionType>();
+
+  const [activeTab, setActiveKey] = useState<string>(
+    props.tabs
+      ? (Array.isArray(props.tabs) ? props.tabs[0].key : props.tabs?.items?.[0].key) || ''
+      : '',
+  );
 
   const {
     request,
@@ -24,6 +39,24 @@ const useTable = <T, D, P extends ParamsType = ParamsType>(props: UseTableProps<
     pageSizeIndex = 'pageLimit' as keyof P,
     currentIndex = 'pageOffset' as keyof P,
   } = props.requestSetting;
+
+  const _tabs = props.tabs;
+
+  let tabs: ListToolBarTabs | undefined;
+
+  if (Array.isArray(_tabs)) {
+    tabs = {
+      items: _tabs as ListToolBarTabs['items'],
+      activeKey: activeTab,
+      onChange(key) {
+        setActiveKey(key);
+        tableRef.current?.reloadAndRest?.();
+      },
+    };
+  } else if (_tabs) {
+    tabs = _tabs;
+  }
+
   const { runAsync } = useRequest((data) => request(data), {
     manual: true,
   });
@@ -49,6 +82,7 @@ const useTable = <T, D, P extends ParamsType = ParamsType>(props: UseTableProps<
     tableRequest,
     pageSize: defaultPageSize,
     columns: props.columns,
+    tabs,
   };
 };
 

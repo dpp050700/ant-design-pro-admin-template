@@ -69,6 +69,25 @@ export default [
       },
     ],
   },
+
+  {
+    path: '/room',
+    name: 'room',
+    icon: 'crown',
+    routes: [
+      {
+        name: 'list',
+        path: '/room/list',
+        component: './room/list',
+      },
+      {
+        name: 'detail',
+        path: '/room/detail/:id',
+        component: './room/detail',
+        hideInMenu: true,
+      },
+    ],
+  },
   {
     path: '/admin',
     name: 'admin',
